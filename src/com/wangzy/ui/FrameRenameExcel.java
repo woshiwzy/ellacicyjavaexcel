@@ -1,4 +1,4 @@
-package com.wangzy;
+package com.wangzy.ui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -26,6 +26,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+
+import com.wangzy.tool.Pair;
+import com.wangzy.tool.Tool;
 
 public class FrameRenameExcel {
 
@@ -120,7 +123,8 @@ public class FrameRenameExcel {
 		panel.add(textFieldSrcCol);
 		textFieldSrcCol.setColumns(10);
 
-		JLabel label = new JLabel("重命名为音频--->>>>");
+		JLabel label = new JLabel("列重命名为新列-->");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setBounds(227, 161, 174, 16);
 		panel.add(label);
 

@@ -1,4 +1,4 @@
-package com.wangzy;
+package com.wangzy.tool;
 
 public class Pair {
 

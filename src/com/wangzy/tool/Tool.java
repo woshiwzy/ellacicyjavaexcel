@@ -1,4 +1,4 @@
-package com.wangzy;
+package com.wangzy.tool;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package com.wangzy;
+package com.wangzy.ui;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Window.Type;
 
 public class MainUI {
 
@@ -41,6 +42,7 @@ public class MainUI {
 	 */
 	private void initialize() {
 		frmExcel = new JFrame();
+		frmExcel.setType(Type.UTILITY);
 		frmExcel.setResizable(false);
 		frmExcel.setTitle("Excel 工具集");
 		

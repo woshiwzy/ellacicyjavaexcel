@@ -119,7 +119,7 @@ public class FrameRenameExcel {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		textFieldSrcCol = new JTextField();
-		textFieldSrcCol.setBounds(158, 156, 57, 26);
+		textFieldSrcCol.setBounds(158, 156, 43, 26);
 		panel.add(textFieldSrcCol);
 		textFieldSrcCol.setColumns(10);
 
@@ -296,7 +296,7 @@ public class FrameRenameExcel {
 
 		textFieldIgnore = new JTextField();
 		textFieldIgnore.setText("-1");
-		textFieldIgnore.setBounds(48, 156, 57, 26);
+		textFieldIgnore.setBounds(48, 156, 43, 26);
 		panel.add(textFieldIgnore);
 		textFieldIgnore.setColumns(10);
 

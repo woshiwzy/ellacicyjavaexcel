@@ -32,9 +32,9 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import java.awt.SystemColor;
 import javax.swing.JTabbedPane;
 
-public class ExcelTool {
+public class FrameExcelExportTool {
 
-	private JFrame frmExcel;
+	public JFrame frmExcel;
 	private JTextField textFieldExcelPath;
 	private JTextField textFieldSavePath;
 	private File fileExcel;
@@ -47,26 +47,29 @@ public class ExcelTool {
 
 	private JButton button_1;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ExcelTool window = new ExcelTool();
-					window.frmExcel.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
+//	/**
+//	 * Launch the application.
+//	 */
+//	public static void main(String[] args) {
+//		
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					FrameExcelExportTool window = new FrameExcelExportTool();
+//					window.frmExcel.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//		
+//	}
 
 	/**
 	 * Create the application.
 	 */
-	public ExcelTool() {
+	public FrameExcelExportTool() {
 		initialize();
 	}
 
@@ -82,7 +85,7 @@ public class ExcelTool {
 
 		int width = 450, height = 400;
 
-		frmExcel.setBounds(100, 100, width, height);
+		frmExcel.setBounds(100, 100, 450, 550);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -91,7 +94,7 @@ public class ExcelTool {
 
 		frmExcel.setLocation(screenWidth / 2 - width / 2, screenHeight / 2 - height / 2);
 
-		frmExcel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmExcel.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmExcel.getContentPane().setLayout(null);
 
 		JButton btnNewButton = new JButton("选择Excel");
@@ -121,6 +124,7 @@ public class ExcelTool {
 
 			}
 		});
+		
 		btnNewButton.setBounds(289, 47, 117, 29);
 		frmExcel.getContentPane().add(btnNewButton);
 
@@ -257,7 +261,7 @@ public class ExcelTool {
 				System.out.println(f.getName());
 				if (filesList.contains(f.getName())) {
 					copyCount++;
-					copyFileUsingFileStreams(f, new File(dstPath.getAbsolutePath() + File.separator + f.getName()));
+					Tool.copyFileUsingFileStreams(f, new File(dstPath.getAbsolutePath() + File.separator + f.getName()));
 					filesList.remove(f.getName());
 				} else {
 //					textAreaLog.append("\n" + f.getName() + " 没有拷贝\n");
@@ -275,20 +279,4 @@ public class ExcelTool {
 
 	}
 
-	private void copyFileUsingFileStreams(File source, File dest) throws IOException {
-		InputStream input = null;
-		OutputStream output = null;
-		try {
-			input = new FileInputStream(source);
-			output = new FileOutputStream(dest);
-			byte[] buf = new byte[1024];
-			int bytesRead;
-			while ((bytesRead = input.read(buf)) > 0) {
-				output.write(buf, 0, bytesRead);
-			}
-		} finally {
-			input.close();
-			output.close();
-		}
-	}
 }

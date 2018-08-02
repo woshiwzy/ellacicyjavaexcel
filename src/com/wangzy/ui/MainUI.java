@@ -44,7 +44,7 @@ public class MainUI {
 		frmExcel = new JFrame();
 		frmExcel.setType(Type.UTILITY);
 		frmExcel.setResizable(false);
-		frmExcel.setTitle("Excel 工具集");
+		frmExcel.setTitle("Excel 工具集(v1.1)");
 		
 		
 		int width = 450, height = 416;

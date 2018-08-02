@@ -1,16 +1,15 @@
 package com.wangzy.ui;
 
 import java.awt.Dimension;
-import java.awt.EventQueue;
+import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,9 +31,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import com.wangzy.tool.Tool;
 
-import java.awt.SystemColor;
-import javax.swing.JTabbedPane;
-
 public class FrameExcelExportTool {
 
 	public JFrame frmExcel;
@@ -50,7 +46,6 @@ public class FrameExcelExportTool {
 
 	private JButton button_1;
 
-	
 //	/**
 //	 * Launch the application.
 //	 */
@@ -127,7 +122,7 @@ public class FrameExcelExportTool {
 
 			}
 		});
-		
+
 		btnNewButton.setBounds(289, 47, 117, 29);
 		frmExcel.getContentPane().add(btnNewButton);
 
@@ -172,7 +167,7 @@ public class FrameExcelExportTool {
 				}
 			}
 		});
-		button.setBounds(167, 343, 117, 29);
+		button.setBounds(125, 412, 231, 83);
 		frmExcel.getContentPane().add(button);
 
 		textFieldSrc = new JTextField();
@@ -199,7 +194,7 @@ public class FrameExcelExportTool {
 		frmExcel.getContentPane().add(button_1);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(55, 230, 351, 101);
+		scrollPane.setBounds(55, 230, 351, 170);
 		frmExcel.getContentPane().add(scrollPane);
 
 		textAreaLog = new JTextArea();
@@ -264,7 +259,8 @@ public class FrameExcelExportTool {
 				System.out.println(f.getName());
 				if (filesList.contains(f.getName())) {
 					copyCount++;
-					Tool.copyFileUsingFileStreams(f, new File(dstPath.getAbsolutePath() + File.separator + f.getName()));
+					Tool.copyFileUsingFileStreams(f,
+							new File(dstPath.getAbsolutePath() + File.separator + f.getName()));
 					filesList.remove(f.getName());
 				} else {
 //					textAreaLog.append("\n" + f.getName() + " 没有拷贝\n");
@@ -272,9 +268,22 @@ public class FrameExcelExportTool {
 			}
 
 			textAreaLog.append("\n共拷贝：" + copyCount + "/" + totalNeedCopy + "个文件\n");
-			for (String f : filesList) {
-				textAreaLog.append("\n未找到：" + f + "\n");
+			
+			if(!filesList.isEmpty()) {
+				
+				for (String f : filesList) {
+					textAreaLog.append("\n未找到：" + f + "\n");
+				}
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+				try {
+					Tool.insertExcel3(filesList, dstPath + File.separator + sdf.format(new Date()) + ".xlsx");
+				} catch (Exception e) {
+					e.printStackTrace();
+					textAreaLog.append("\n" + "统计未导入成功的数据失败。" + "\n");
+				}
 			}
+
 
 		} else {
 			textAreaLog.append("\n源Excel 为空\n");

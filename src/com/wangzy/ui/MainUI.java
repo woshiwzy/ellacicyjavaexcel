@@ -7,7 +7,6 @@ import java.awt.Window.Type;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -27,12 +26,11 @@ public class MainUI {
 		try {
 
 			BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
+
 			org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
 
 			UIManager.put("RootPane.setupButtonVisible", false);
 
-			BeautyEyeLNFHelper.translucencyAtFrameInactive = true;
-			
 		} catch (Exception e) {
 			// TODO exception
 		}
@@ -61,6 +59,7 @@ public class MainUI {
 	 */
 	private void initialize() {
 		frmExcel = new JFrame();
+		frmExcel.setIconImage(Toolkit.getDefaultToolkit().getImage(MainUI.class.getResource("/res/easy.jpg")));
 //		frmExcel.setOpacity(0.0f);
 		frmExcel.setType(Type.UTILITY);
 		frmExcel.setResizable(false);
@@ -98,7 +97,7 @@ public class MainUI {
 				});
 			}
 		});
-		btnNewButton.setBounds(93, 53, 254, 125);
+		btnNewButton.setBounds(93, 115, 254, 85);
 		frmExcel.getContentPane().add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton("按列重命名工具");
@@ -118,7 +117,7 @@ public class MainUI {
 				});
 			}
 		});
-		btnNewButton_1.setBounds(93, 247, 254, 125);
+		btnNewButton_1.setBounds(93, 257, 254, 85);
 		frmExcel.getContentPane().add(btnNewButton_1);
 	}
 

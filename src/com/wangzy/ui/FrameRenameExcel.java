@@ -75,6 +75,7 @@ public class FrameRenameExcel {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(FrameRenameExcel.class.getResource("/res/easy.jpg")));
 		frame.setTitle("命名指定列文件名");
 		frame.setResizable(false);
 

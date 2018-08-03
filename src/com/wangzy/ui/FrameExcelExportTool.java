@@ -77,7 +77,7 @@ public class FrameExcelExportTool {
 	private void initialize() {
 		frmExcel = new JFrame();
 		frmExcel.setBackground(SystemColor.scrollbar);
-		frmExcel.setIconImage(Toolkit.getDefaultToolkit().getImage("/Users/wangzy/Documents/icon_surf.png"));
+		frmExcel.setIconImage(Toolkit.getDefaultToolkit().getImage(FrameExcelExportTool.class.getResource("/res/easy.jpg")));
 		frmExcel.setResizable(false);
 		frmExcel.setTitle("Excel文件拷贝工具");
 

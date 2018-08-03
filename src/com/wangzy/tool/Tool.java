@@ -53,7 +53,7 @@ public class Tool {
 		for (String data : sets) {
 			XSSFRow row = sheet.getRow(x); // 获取指定的行对象，无数据则为空，需要创建
 			if (row == null) {
-				row = sheet.createRow(0); // 该行无数据，创建行对象
+				row = sheet.createRow(x); // 该行无数据，创建行对象
 			}
 			Cell cell = row.createCell(0); // 创建指定单元格对象。如本身有数据会替换掉
 			cell.setCellValue(data.replace(".mp3", "")); // 设置内容

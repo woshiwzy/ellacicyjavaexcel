@@ -49,13 +49,15 @@ public class Tool {
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 		sheet = workbook.createSheet("导入失败的数据汇总_"+sdf.format(new Date()));
 
+		int x=0;
 		for (String data : sets) {
-			XSSFRow row = sheet.getRow(0); // 获取指定的行对象，无数据则为空，需要创建
+			XSSFRow row = sheet.getRow(x); // 获取指定的行对象，无数据则为空，需要创建
 			if (row == null) {
 				row = sheet.createRow(0); // 该行无数据，创建行对象
 			}
 			Cell cell = row.createCell(0); // 创建指定单元格对象。如本身有数据会替换掉
 			cell.setCellValue(data.replace(".mp3", "")); // 设置内容
+			x++;
 		}
 		FileOutputStream fo = new FileOutputStream(absFilePath); // 输出到文件
 		workbook.write(fo);

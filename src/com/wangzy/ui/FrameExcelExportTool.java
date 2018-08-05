@@ -101,17 +101,18 @@ public class FrameExcelExportTool {
 
 				JFileChooser chooser = new JFileChooser();
 				chooser.setFileFilter(new FileFilter() {
+					
 					public String getDescription() {
 						return "*.xls;*.xlsx";
 					}
 
 					public boolean accept(File file) {
 						String name = file.getName();
-						return name.toLowerCase().endsWith(".xls") || name.toLowerCase().endsWith(".xlsx"); // 仅显示目录和xls、xlsx文件
+						return file.isDirectory()||  name.toLowerCase().endsWith(".xls") || name.toLowerCase().endsWith(".xlsx"); // 仅显示目录和xls、xlsx文件
 					}
 
 				});
-				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 				chooser.showDialog(new JLabel(), "选择Excel 文件");
 				fileExcel = chooser.getSelectedFile();
 				if (null == fileExcel) {

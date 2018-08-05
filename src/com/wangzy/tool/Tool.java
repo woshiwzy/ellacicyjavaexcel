@@ -19,6 +19,14 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Tool {
+	
+	
+
+	public static void cutFileUsingFileStreams(File source, File dest) throws IOException {
+		
+		source.renameTo(dest);
+		System.out.println("cut:" + source.getAbsolutePath() + " --->> " + dest.getAbsolutePath());
+	}
 
 	public static void copyFileUsingFileStreams(File source, File dest) throws IOException {
 

@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -120,6 +122,7 @@ public class FrameRenameExcel {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		textFieldSrcCol = new JTextField();
+		textFieldSrcCol.setText("0");
 		textFieldSrcCol.setBounds(158, 156, 43, 26);
 		panel.add(textFieldSrcCol);
 		textFieldSrcCol.setColumns(10);
@@ -130,6 +133,7 @@ public class FrameRenameExcel {
 		panel.add(label);
 
 		textFieldTargetCol = new JTextField();
+		textFieldTargetCol.setText("1");
 		textFieldTargetCol.setBounds(402, 156, 43, 26);
 		panel.add(textFieldTargetCol);
 		textFieldTargetCol.setColumns(10);
@@ -216,18 +220,29 @@ public class FrameRenameExcel {
 							Pair par = fileNeedRename(f, filesList);
 							if (null != par) {
 								copyCount++;
-								Tool.copyFileUsingFileStreams(f, new File(
-										fileDstDir.getAbsolutePath() + File.separator + par.getDst() + ".mp3"));
+								Tool.cutFileUsingFileStreams(f, new File(fileDstDir.getAbsolutePath() + File.separator + par.getDst() + ".mp3"));
 								filesList.remove(par);
 							} else {
 //								textAreaLogRename.append("\n" + f.getName() + " 没有拷贝\n");
 							}
 						}
 
-						for (Pair p : filesList) {
-							textAreaLogRename.append("\n" + p.getSrc() + " 没有拷贝\n");
-						}
+						if(!filesList.isEmpty()) {
+							
+							Set<String> failset=new HashSet<>();
+							for (Pair p : filesList) {
+								textAreaLogRename.append("\n" + p.getSrc() + " 没有拷贝\n");
+								failset.add(p.getSrc());
+							}
 
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+							try {
+								Tool.insertExcel3(failset, fileDstDir.getAbsolutePath() + File.separator + sdf.format(new Date()) + ".xlsx");
+							} catch (Exception e) {
+								e.printStackTrace();
+								textAreaLogRename.append("\n" + "统计未导入成功的数据失败。" + "\n");
+							}
+						}
 						textAreaLogRename.append("\n成功拷贝:" + copyCount + "/" + totalNeedCopy + "\n");
 
 					} catch (Exception e1) {
@@ -318,7 +333,7 @@ public class FrameRenameExcel {
 
 					public boolean accept(File file) {
 						String name = file.getName();
-						return name.toLowerCase().endsWith(".xls") || name.toLowerCase().endsWith(".xlsx"); // 仅显示目录和xls、xlsx文件
+						return file.isDirectory()|| name.toLowerCase().endsWith(".xls") || name.toLowerCase().endsWith(".xlsx"); // 仅显示目录和xls、xlsx文件
 					}
 
 				});

@@ -1,6 +1,7 @@
 package com.wangzy.ellacicy;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -10,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Vector;
@@ -52,6 +54,9 @@ public class QueryUI extends JFrame {
 	protected ArrayList<DeviceRecord> alldevices;
 	private DatePicker datePickerStart;
 	private DatePicker datePickerEnd;
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private JLabel labelBusnessInfo;
+	private JLabel labelRecord;
 
 	/**
 	 * Launch the application.
@@ -96,16 +101,43 @@ public class QueryUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// 按商户号查询
 
-				String inputBusnessNo = textFieldBusnessNo.getText().trim();
-				ArrayList<DeviceRecord> devices = new ArrayList<>();
-				for (DeviceRecord device : alldevices) {
-					String busnessNo = device.getBusnessNo();
-					if (inputBusnessNo.equalsIgnoreCase(busnessNo)) {
-						devices.add(device);
+				System.out.println("date :" + getStartDate() + "到" + getEndDate());
+
+				if (null != alldevices) {
+					String inputBusnessNo = textFieldBusnessNo.getText().trim();
+
+					ArrayList<DeviceRecord> devices = new ArrayList<>();
+					ArrayList<WorkHistory> queriedWorks = new ArrayList<>();
+
+					for (WorkHistory work : allwork) {
+
+						if ((null != getStartDate() && null != getEndDate())
+								&& (work.getDate().getTime() / 1000 >= getStartDate().getTime() / 1000
+										&& work.getDate().getTime() / 1000 <= getEndDate().getTime() / 1000)) {
+							queriedWorks.add(work);
+						} else if ((null != getStartDate() && null == getEndDate())
+								&& (work.getDate().getTime() / 1000 >= getStartDate().getTime() / 1000)) {
+							queriedWorks.add(work);
+						} else if ((null == getStartDate() && null != getEndDate())
+								&& (work.getDate().getTime() / 1000 <= getEndDate().getTime() / 1000)) {
+							queriedWorks.add(work);
+						} else if (null == getStartDate() && null == getEndDate()) {
+							queriedWorks.add(work);
+						}
 					}
+
+					for (WorkHistory work : queriedWorks) {
+
+						if (null != work.getBusnessNo()) {
+							String busnessNo = work.getBusnessNo().trim();
+							if ((inputBusnessNo.equalsIgnoreCase(busnessNo) && null != work.getDeviceRecord())
+									|| "".equals(inputBusnessNo) || null == inputBusnessNo) {
+								devices.add(work.getDeviceRecord());
+							}
+						}
+					}
+					fillData(devices);
 				}
-				fillData(devices);
-				
 			}
 		});
 		btnNewButton.setBounds(617, 110, 117, 29);
@@ -114,13 +146,37 @@ public class QueryUI extends JFrame {
 		JButton btnNewButton_1 = new JButton("按终端号查询");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String inputTerminalNo = textFieldTerminalNo.getText();
-				ArrayList<DeviceRecord> devices = new ArrayList<>();
-				for (DeviceRecord device : alldevices) {
-					if (String.valueOf(device.getDeviceNo()).equals(inputTerminalNo)) {
-						devices.add(device);
+				
+				String inputTerminalNo = textFieldTerminalNo.getText().trim();
+				
+				ArrayList<WorkHistory> queriedWorks=new ArrayList<>();
+
+				for (WorkHistory work : allwork) {
+
+					if ((null != getStartDate() && null != getEndDate())
+							&& (work.getDate().getTime() / 1000 >= getStartDate().getTime() / 1000
+									&& work.getDate().getTime() / 1000 <= getEndDate().getTime() / 1000)) {
+						queriedWorks.add(work);
+					} else if ((null != getStartDate() && null == getEndDate())
+							&& (work.getDate().getTime() / 1000 >= getStartDate().getTime() / 1000)) {
+						queriedWorks.add(work);
+					} else if ((null == getStartDate() && null != getEndDate())
+							&& (work.getDate().getTime() / 1000 <= getEndDate().getTime() / 1000)) {
+						queriedWorks.add(work);
+					} else if (null == getStartDate() && null == getEndDate()) {
+						queriedWorks.add(work);
 					}
 				}
+				
+				ArrayList<DeviceRecord> devices = new ArrayList<>();
+				
+				for (WorkHistory wh : queriedWorks) {
+					
+					if (String.valueOf(wh.getTerminalNo()).equals(inputTerminalNo) || "".equals(inputTerminalNo)) {
+						devices.add(wh.getDeviceRecord());
+					}
+				}
+				
 				fillData(devices);
 			}
 		});
@@ -170,13 +226,13 @@ public class QueryUI extends JFrame {
 		tableWorkHistory = new JTable();
 		scrollPane_1.setViewportView(tableWorkHistory);
 
-		JLabel label_2 = new JLabel("维护记录");
-		label_2.setBounds(23, 373, 61, 16);
-		contentPane.add(label_2);
+		labelRecord = new JLabel("维护记录");
+		labelRecord.setBounds(23, 373, 164, 16);
+		contentPane.add(labelRecord);
 
-		JLabel label_3 = new JLabel("商户信息");
-		label_3.setBounds(23, 252, 61, 16);
-		contentPane.add(label_3);
+		labelBusnessInfo = new JLabel("商户信息");
+		labelBusnessInfo.setBounds(23, 252, 145, 16);
+		contentPane.add(labelBusnessInfo);
 
 		JLabel label = new JLabel("选择时间段");
 		label.setBounds(23, 181, 82, 42);
@@ -232,6 +288,8 @@ public class QueryUI extends JFrame {
 						for (WorkHistory wh : allwork) {
 							if (deviceRecord.getDeviceNo() == wh.getTerminalNo()) {
 								deviceRecord.addWorkHistory(wh);
+								wh.setBusnessNo(deviceRecord.getBusnessNo());
+								wh.setDeviceRecord(deviceRecord);
 							}
 						}
 					}
@@ -283,11 +341,11 @@ public class QueryUI extends JFrame {
 		JLabel label_6 = new JLabel("操作日志");
 		label_6.setBounds(23, 579, 61, 16);
 		contentPane.add(label_6);
-		
+
 		datePickerStart = new DatePicker();
 		datePickerStart.setBounds(143, 193, 180, 21);
 		contentPane.add(datePickerStart);
-		
+
 		datePickerEnd = new DatePicker();
 		datePickerEnd.setBounds(405, 193, 180, 21);
 		contentPane.add(datePickerEnd);
@@ -299,6 +357,8 @@ public class QueryUI extends JFrame {
 	private void fillData(ArrayList<DeviceRecord> devicesRecords) {
 
 		System.out.println("收到数据:" + devicesRecords.size());
+		log2Area("查到商户信息:" + devicesRecords.size());
+		labelBusnessInfo.setText("商户信息:"+devicesRecords.size());
 
 		MyTableModel dataModel = new MyTableModel();
 		dataModel.devicesRecord = devicesRecords;
@@ -352,12 +412,15 @@ public class QueryUI extends JFrame {
 		table.setModel(dataModel);
 		if (devicesRecords.size() == 1) {
 			fillWorkData(devicesRecords.get(0).getWorkhistories());
-		}else {
+		} else {
 			fillWorkData(new ArrayList<>());
 		}
 	}
 
 	private void fillWorkData(ArrayList<WorkHistory> workhistry) {
+		
+		log2Area("查到维护记录:"+workhistry.size());
+		labelRecord.setText("维护记录:"+workhistry.size());
 
 		MyTableModelWork dataModel = new MyTableModelWork();
 		dataModel.works = workhistry;
@@ -377,7 +440,28 @@ public class QueryUI extends JFrame {
 				tabItem.add(String.valueOf(work.getTerminalNo()));
 				tabItem.add(sdf.format(work.getDate()));
 				tabItem.add(work.getWorkType());
+
 				dataVector.add(tabItem);
+
+//				if ((null != getStartDate() && null != getEndDate())) {
+//
+//					if (work.getDate().getTime() >= getStartDate().getTime()
+//							&& work.getDate().getTime() <= getEndDate().getTime()) {
+//						dataVector.add(tabItem);
+//					}
+//				} else if (null != getStartDate() && null == getEndDate()) {
+//
+//					if (work.getDate().getTime() >= getStartDate().getTime()) {
+//						dataVector.add(tabItem);
+//					}
+//				} else if (null == getStartDate() && null != getEndDate()) {
+//					if (work.getDate().getTime() <= getEndDate().getTime()) {
+//						dataVector.add(tabItem);
+//					}
+//				} else {
+//					dataVector.add(tabItem);
+//				}
+
 			}
 		}
 
@@ -390,6 +474,27 @@ public class QueryUI extends JFrame {
 		tableWorkHistory.setModel(dataModel);
 	}
 
+	private Date getStartDate() {
+		try {
+			Date da = (Date) datePickerStart.getValue();
+			return da;
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
+	private Date getEndDate() {
+		try {
+			Date da = (Date) datePickerEnd.getValue();
+
+			Calendar ca = Calendar.getInstance();
+			ca.setTimeInMillis(da.getTime() + 24 * 60 * 60 * 1000 - 1000);
+			return ca.getTime();
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
 	class MyTableModel extends DefaultTableModel {
 		public ArrayList<DeviceRecord> devicesRecord;
 	}
@@ -398,39 +503,38 @@ public class QueryUI extends JFrame {
 		public ArrayList<WorkHistory> works;
 	}
 
-	
-	  private static DatePicker getDatePicker() {
-	        final DatePicker datepick;
-	        // 格式
-	        String DefaultFormat = "yyyy-MM-dd HH:mm:ss";
-	        // 当前时间
-	        Date date = new Date();
-	        // 字体
-	        Font font = new Font("Times New Roman", Font.BOLD, 14);
+	private static DatePicker getDatePicker() {
+		final DatePicker datepick;
+		// 格式
+		String DefaultFormat = "yyyy-MM-dd";
+		// 当前时间
+		Date date = new Date();
+		// 字体
+		Font font = new Font("Times New Roman", Font.BOLD, 14);
 
-	        Dimension dimension = new Dimension(177, 24);
+		Dimension dimension = new Dimension(177, 24);
 
-	        int[] hilightDays = { 1, 3, 5, 7 };
+		int[] hilightDays = { 1, 3, 5, 7 };
 
-	        int[] disabledDays = { 4, 6, 5, 9 };
-	    //构造方法（初始时间，时间显示格式，字体，控件大小）
-	        datepick = new DatePicker(date, DefaultFormat, font, dimension);
+		int[] disabledDays = { 4, 6, 5, 9 };
+		// 构造方法（初始时间，时间显示格式，字体，控件大小）
+		datepick = new DatePicker(date, DefaultFormat, font, dimension);
 
-	        datepick.setLocation(137, 83);//设置起始位置
-	        /*
-	        //也可用setBounds()直接设置大小与位置
-	        datepick.setBounds(137, 83, 177, 24);
-	        */
-	        // 设置一个月份中需要高亮显示的日子
-	        datepick.setHightlightdays(hilightDays, Color.red);
-	        // 设置一个月份中不需要的日子，呈灰色显示
-	        datepick.setDisableddays(disabledDays);
-	        // 设置国家
-	        datepick.setLocale(Locale.CHINA);
-	        // 设置时钟面板可见
-	        datepick.setTimePanleVisible(true);
-	        return datepick;
-	    }
+		datepick.setLocation(137, 83);// 设置起始位置
+		/*
+		 * //也可用setBounds()直接设置大小与位置 datepick.setBounds(137, 83, 177, 24);
+		 */
+		// 设置一个月份中需要高亮显示的日子
+		datepick.setHightlightdays(hilightDays, Color.red);
+		// 设置一个月份中不需要的日子，呈灰色显示
+		datepick.setDisableddays(disabledDays);
+		// 设置国家
+		datepick.setLocale(Locale.CHINA);
+		// 设置时钟面板可见
+		datepick.setTimePanleVisible(true);
+		return datepick;
+	}
+
 	private void log2Area(String log) {
 
 		textAreaLog.append("\n" + log + "\n");

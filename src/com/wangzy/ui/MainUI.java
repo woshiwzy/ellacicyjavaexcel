@@ -23,17 +23,17 @@ public class MainUI {
 	 */
 	public static void main(String[] args) {
 
-		try {
-
-			BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
-
-			org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
-
-			UIManager.put("RootPane.setupButtonVisible", false);
-
-		} catch (Exception e) {
-			// TODO exception
-		}
+//		try {
+//
+//			BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.translucencySmallShadow;
+//
+//			org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+//
+//			UIManager.put("RootPane.setupButtonVisible", false);
+//
+//		} catch (Exception e) {
+//			// TODO exception
+//		}
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

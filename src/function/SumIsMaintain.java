@@ -12,54 +12,8 @@ import domain.WorkDetail;
 
 public class SumIsMaintain {
 
-	/**
-	 * 获取结果集
-	 * 
-	 * @param sql
-	 * @return
-	 * @throws ClassNotFoundException
-	 */
-	public static ResultSet getResultWithSql(String sql) throws ClassNotFoundException {
-		Connection conn = null;
-		Statement stmt = null;
-		try {
-			conn = Common.getNewConnection();
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
-			return rs;
-		} catch (SQLException se) {
-			se.printStackTrace();
-		}
-		return null;
-	}
 
-	public static Object[] getAllWorkDetail() {
-		ArrayList<WorkDetail> workDetails = new ArrayList<>();
-		Set<String> bids = new HashSet<>();
-//		HashMap<String, WorkDetail> workHasMap = new HashMap();
-		try {
-			String sql = "select 完成时间,工作人员,商户号 from 员工工作明细 order by 完成时间 desc";
-			ResultSet rs = getResultWithSql(sql);
-			while (rs.next()) {
-				// 通过字段检索
-				String complteTime = rs.getString("完成时间");
-				String employee = rs.getString("工作人员");
-				String bid = rs.getString("商户号");
-				bids.add(bid);
-				WorkDetail workDetail = new WorkDetail(employee, bid, complteTime);
-//				workHasMap.put(bid, workDetail);
-				workDetails.add(workDetail);
-//				System.out.print("工作人员: " + employee + " 商户号：" + bid + " 完成时间:" + complteTime + " \n");
-			}
-			// 完成后关闭
-			rs.close();
-		} catch (Exception se) {
-			se.printStackTrace();
-		}
-
-		Object[] rets = { workDetails, bids };
-		return rets;
-	}
+	
 
 	public static WorkDetail getLastWorkDetail(String bid, ArrayList<WorkDetail> details) {
 		for (WorkDetail wd : details) {
@@ -82,7 +36,7 @@ public class SumIsMaintain {
 	public static void main(String[] args) {
 		try {
 			long start = System.currentTimeMillis();
-			Object[] rets = getAllWorkDetail();
+			Object[] rets = Common.getAllWorkDetail();
 			ArrayList<WorkDetail> allworks = (ArrayList<WorkDetail>) rets[0];
 			Set<String> bids = (Set<String>) rets[1];
 
@@ -91,7 +45,7 @@ public class SumIsMaintain {
 //			}
 
 			String sql = "select 商户号 from 2019年度工作任务";
-			ResultSet rs = getResultWithSql(sql);
+			ResultSet rs = Common.getResultWithSql(sql);
 			Connection conn = Common.getNewConnection();
 			Statement statement = conn.createStatement();
 //            // 展开结果集数据库
